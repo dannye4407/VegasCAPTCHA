@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vegas Test CAPTCHA</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .captcha-box {
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: inline-block;
+    }
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+      margin: 10px auto;
+    }
+    .tile {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #ddd;
+      background-size: 300px 300px;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+    .selected {
+      border-color: blue;
+    }
+    button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Vegas Test CAPTCHA</h2>
+  <p><strong>Select all tiles that contain the person who will be your frieeennnndddd</strong></p>
+
+  <div class="captcha-box">
+    <div id="grid" class="images-grid"></div>
+    <button onclick="verify()">Verify</button>
+    <p id="result" style="color:red; margin-top:10px;"></p>
+  </div>
+
+  <script>
+    let tiles = [];
+
+    // Define which tiles should be selected (row, col) — adjust as needed
+    const correctTiles = [
+      [0, 0], // top-left
+      [0, 1], // top-mid
+      [1, 0], // center-left
+      [1, 1], // center-mid
+      [2, 0],  // bottom-left
+      [2, 1] 
+    ];
+
+    window.onload = function() {
+      const img = new Image();
+      img.crossOrigin = "anonymous"; // For CORS safety
+      img.onload = () => drawTiles(img);
+      img.src = "https://i.imgur.com/Jx4nfCW.jpeg"; // Replace with your own image URL if desired
+    };
+
+    function drawTiles(img) {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      tiles = [];
+
+      const tileSize = 100;
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 300;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, 300, 300);
+      const fullImage = canvas.toDataURL();
+
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.style.backgroundImage = `url(${fullImage})`;
+          tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+          tile.dataset.row = row;
+          tile.dataset.col = col;
+          tile.onclick = () => tile.classList.toggle("selected");
+          grid.appendChild(tile);
+          tiles.push(tile);
+        }
+      }
+    }
+
+    function verify() {
+      let allCorrect = true;
+      let selectedCount = 0;
+
+      tiles.forEach(tile => {
+        const isSelected = tile.classList.contains("selected");
+        const row = parseInt(tile.dataset.row);
+        const col = parseInt(tile.dataset.col);
+        const shouldBeSelected = correctTiles.some(pos => pos[0] === row && pos[1] === col);
+
+        if (isSelected !== shouldBeSelected) {
+          allCorrect = false;
+        }
+
+        if (isSelected) selectedCount++;
+      });
+
+      const result = document.getElementById('result');
+      if (allCorrect && selectedCount > 0) {
+        result.style.color = "green";
+        result.innerText = "CAPTCHA passed. You're clearly human.";
+      } else {
+        result.style.color = "red";
+        result.innerText = "Verification failed. Try again.";
+      }
+    }
+  </script>
+
+</body>
+</html>
