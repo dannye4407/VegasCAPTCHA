@@ -56,7 +56,7 @@
 <body>
 
   <h2>Vegas Test CAPTCHA</h2>
-  <p><strong>Select all tiles that contain the person who will be your frrriieeenndd</strong></p>
+  <p><strong>Select all tiles that contain the person who will be your frieeennnndddd</strong></p>
 
   <div class="captcha-box">
     <div id="grid" class="images-grid"></div>
@@ -69,4 +69,71 @@
 
     // Define which tiles should be selected (row, col)
     const correctTiles = [
-      [0, 0], [0, 1], [1, 0]()
+      [0, 0], [0, 1], [1, 0],
+      [1, 1], [2, 0], [2, 1]
+    ];
+
+    window.onload = function () {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => drawTiles(img);
+      img.src = "https://i.imgur.com/Jx4nfCW.jpeg"; // Use your image URL
+    };
+
+    function drawTiles(img) {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      tiles = [];
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 900;
+      canvas.height = 900;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 900, 900);
+      const fullImage = canvas.toDataURL();
+
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.style.backgroundImage = `url(${fullImage})`;
+          tile.style.backgroundPosition = `${-col * 33.33}% ${-row * 33.33}%`;
+          tile.dataset.row = row;
+          tile.dataset.col = col;
+          tile.onclick = () => tile.classList.toggle("selected");
+          grid.appendChild(tile);
+          tiles.push(tile);
+        }
+      }
+    }
+
+    function verify() {
+      let allCorrect = true;
+      let selectedCount = 0;
+
+      tiles.forEach(tile => {
+        const isSelected = tile.classList.contains("selected");
+        const row = parseInt(tile.dataset.row);
+        const col = parseInt(tile.dataset.col);
+        const shouldBeSelected = correctTiles.some(pos => pos[0] === row && pos[1] === col);
+
+        if (isSelected !== shouldBeSelected) {
+          allCorrect = false;
+        }
+
+        if (isSelected) selectedCount++;
+      });
+
+      const result = document.getElementById("result");
+      if (allCorrect && selectedCount > 0) {
+        result.style.color = "green";
+        result.innerText = "CAPTCHA passed. You're clearly human.";
+      } else {
+        result.style.color = "red";
+        result.innerText = "Verification failed. Try again.";
+      }
+    }
+  </script>
+
+</body>
+</html>
