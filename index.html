@@ -1,38 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vegas Test CAPTCHA</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
-      margin-top: 50px;
+      margin: 0;
+      padding: 20px;
     }
+
     .captcha-box {
       border: 1px solid #ccc;
       padding: 20px;
       display: inline-block;
+      max-width: 100%;
     }
+
     .images-grid {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 2px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2vw;
       margin: 10px auto;
+      max-width: 90vw;
     }
+
     .tile {
-      width: 100px;
-      height: 100px;
+      width: 28vw;
+      height: 28vw;
       border: 2px solid #ddd;
-      background-size: 300px 300px;
+      background-size: 84vw 84vw;
       background-repeat: no-repeat;
       cursor: pointer;
     }
+
     .selected {
       border-color: blue;
     }
+
     button {
       margin-top: 20px;
+      font-size: 1.2rem;
+      padding: 10px 20px;
+    }
+
+    #result {
+      margin-top: 10px;
+      font-size: 1rem;
     }
   </style>
 </head>
@@ -44,13 +60,13 @@
   <div class="captcha-box">
     <div id="grid" class="images-grid"></div>
     <button onclick="verify()">Verify</button>
-    <p id="result" style="color:red; margin-top:10px;"></p>
+    <p id="result" style="color:red;"></p>
   </div>
 
   <script>
     let tiles = [];
 
-    // Define which tiles should be selected (row, col) — adjust as needed
+    // Define which tiles should be selected (row, col)
     const correctTiles = [
       [0, 0], // top-left
       [0, 1], // top-mid
@@ -60,11 +76,11 @@
       [2, 1] 
     ];
 
-    window.onload = function() {
+    window.onload = function () {
       const img = new Image();
-      img.crossOrigin = "anonymous"; // For CORS safety
+      img.crossOrigin = "anonymous";
       img.onload = () => drawTiles(img);
-      img.src = "https://i.imgur.com/Jx4nfCW.jpeg"; // Replace with your own image URL if desired
+      img.src = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Stop_sign_light_red.png"; // Use your image URL
     };
 
     function drawTiles(img) {
@@ -72,12 +88,11 @@
       grid.innerHTML = "";
       tiles = [];
 
-      const tileSize = 100;
-      const canvas = document.createElement('canvas');
-      canvas.width = 300;
-      canvas.height = 300;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, 300, 300);
+      const canvas = document.createElement("canvas");
+      canvas.width = 900;
+      canvas.height = 900;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 900, 900);
       const fullImage = canvas.toDataURL();
 
       for (let row = 0; row < 3; row++) {
@@ -85,7 +100,7 @@
           const tile = document.createElement("div");
           tile.className = "tile";
           tile.style.backgroundImage = `url(${fullImage})`;
-          tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
+          tile.style.backgroundPosition = `-${col * 300}px -${row * 300}px`;
           tile.dataset.row = row;
           tile.dataset.col = col;
           tile.onclick = () => tile.classList.toggle("selected");
