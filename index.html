@@ -123,4 +123,19 @@
           allCorrect = false;
         }
 
-        if (isSe
+        if (isSelected) selectedCount++;
+      });
+
+      const result = document.getElementById("result");
+      if (allCorrect && selectedCount > 0) {
+        result.style.color = "green";
+        result.innerText = "Passed. Continue to Fire it in there!";
+      } else {
+        result.style.color = "red";
+        result.innerText = "Failed. Eh, you're fine, just mix in a water with the next round";
+      }
+    }
+  </script>
+
+</body>
+</html>
