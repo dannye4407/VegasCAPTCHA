@@ -23,17 +23,14 @@
     .images-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1vw;
+      gap: 2px;
       margin: 10px auto;
-      width: 96vw;
     }
 
     .tile {
-      width: 31vw;
-      height: 31vw;
       border: 2px solid #ddd;
-      background-size: 900px 900px;
       background-repeat: no-repeat;
+      background-size: cover;
       cursor: pointer;
     }
 
@@ -66,8 +63,6 @@
 
   <script>
     let tiles = [];
-
-    // Define which tiles should be selected (row, col)
     const correctTiles = [
       [0, 0], [0, 1], [1, 0],
       [1, 1], [2, 0], [2, 1]
@@ -85,19 +80,26 @@
       grid.innerHTML = "";
       tiles = [];
 
+      const tileSize = Math.floor(window.innerWidth / 3.2); // ~32vw per tile
+      const fullSize = tileSize * 3;
+
+      // Draw canvas at fullSize × fullSize
       const canvas = document.createElement("canvas");
-      canvas.width = 900;
-      canvas.height = 900;
+      canvas.width = fullSize;
+      canvas.height = fullSize;
       const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, 900, 900);
+      ctx.drawImage(img, 0, 0, fullSize, fullSize);
       const fullImage = canvas.toDataURL();
 
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
           const tile = document.createElement("div");
           tile.className = "tile";
+          tile.style.width = tileSize + "px";
+          tile.style.height = tileSize + "px";
           tile.style.backgroundImage = `url(${fullImage})`;
-          tile.style.backgroundPosition = `-${col * 300}px -${row * 300}px`;
+          tile.style.backgroundSize = `${fullSize}px ${fullSize}px`;
+          tile.style.backgroundPosition = `-${col * tileSize}px -${row * tileSize}px`;
           tile.dataset.row = row;
           tile.dataset.col = col;
           tile.onclick = () => tile.classList.toggle("selected");
@@ -121,19 +123,4 @@
           allCorrect = false;
         }
 
-        if (isSelected) selectedCount++;
-      });
-
-      const result = document.getElementById("result");
-      if (allCorrect && selectedCount > 0) {
-        result.style.color = "green";
-        result.innerText = "Passed. Continue to Fire it in there!";
-      } else {
-        result.style.color = "red";
-        result.innerText = "Failed. Eh, you're fine, just mix in a water with the next round";
-      }
-    }
-  </script>
-
-</body>
-</html>
+        if (isSe
