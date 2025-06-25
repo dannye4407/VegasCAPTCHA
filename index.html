@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vegas Test CAPTCHA</title>
+  <title>Vegas Test</title>
   <style>
     body {
       font-family: sans-serif;
@@ -55,7 +55,7 @@
 </head>
 <body>
 
-  <h2>Vegas Test CAPTCHA</h2>
+  <h2>Vegas Test</h2>
   <p><strong>Select all tiles that contain the person who will be your frieeeeend</strong></p>
 
   <div class="captcha-box">
@@ -127,10 +127,10 @@
       const result = document.getElementById("result");
       if (allCorrect && selectedCount > 0) {
         result.style.color = "green";
-        result.innerText = "CAPTCHA passed. Continue to Fire it in there!";
+        result.innerText = "Passed. Continue to Fire it in there!";
       } else {
         result.style.color = "red";
-        result.innerText = "Verification failed. Eh, you're fine, just mix in a water with the next round";
+        result.innerText = "Failed. Eh, you're fine, just mix in a water with the next round";
       }
     }
   </script>
